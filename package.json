@@ -1,0 +1,21 @@
+{
+  "name": "mini-property-listing-platform",
+  "version": "1.0.0",
+  "description": "A simplified role-based property listing platform built with  Node.js/Express, Next.js, and PostgreSQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newal-dev/mini-property-listing-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/newal-dev/mini-property-listing-platform/issues"
+  },
+  "homepage": "https://github.com/newal-dev/mini-property-listing-platform#readme"
+}
