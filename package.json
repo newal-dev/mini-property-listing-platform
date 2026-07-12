@@ -12,10 +12,17 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/newal-dev/mini-property-listing-platform/issues"
   },
-  "homepage": "https://github.com/newal-dev/mini-property-listing-platform#readme"
+  "homepage": "https://github.com/newal-dev/mini-property-listing-platform#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
