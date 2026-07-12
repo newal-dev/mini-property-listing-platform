@@ -20,51 +20,52 @@ enum PropertyStatus {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
   passwordHash String
-  role Role @default(USER)
-  createdAt DateTime @default(now())
-  deletedAT DateTime?
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  deletedAt    DateTime?
 
   properties Property[]
-  favorites Favorite[]
+  favorites  Favorite[]
 }
 
 model Property {
-  id String @id @default(upid())
-  ownerId String
-  title String 
+  id          String         @id @default(uuid())
+  ownerId     String
+  title       String
   description String
-  location String
-  price Decimal
-  status PropertyStatus @default(DRAFT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAT DateTime?
+  location    String
+  price       Decimal
+  status      PropertyStatus @default(DRAFT)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
 
-  owner User @relation(fields: [ownerId], references: [id])
-  images PropertyImage[]
+  owner     User            @relation(fields: [ownerId], references: [id])
+  images    PropertyImage[]
   favorites Favorite[]
 }
 
 model PropertyImage {
-  id String @id @default(uuid())
+  id         String   @id @default(uuid())
   propertyId String
-  url String
-  createdAt DateTime @default(now())
+  url        String
+  createdAt  DateTime @default(now())
 
-  propertyId Property @relation(fields: [propertyId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
 }
 
 model Favorite {
-  id String @id @default(uuid())
-  userId String
+  id         String   @id @default(uuid())
+  userId     String
   propertyId String
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  userID User @relation(fields: [userID], references: [id])
-  propertyId Property @relation(fields: [propertyId], refernces: [id])
+  user     User     @relation(fields: [userId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
   @@unique([userId, propertyId])
 }
