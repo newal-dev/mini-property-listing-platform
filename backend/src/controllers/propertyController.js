@@ -10,4 +10,24 @@ async function listProperties(req,res) {
     }
 }
 
-module.exports = { listProperties };
+async function createProperty(req,res) {
+    try {
+        const { title, description, location, price } = req.body;
+        const property = await propertyService.createProperty({
+            ownerId: req.user.userId,
+            title,
+            description, 
+            location, 
+            price,
+        });
+        res.status(201).json(property);
+    } catch (error) {
+        if(error.statusCode) {
+            return res.status(error.statusCode).json({ error:error.message });
+        }
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+}
+
+module.exports = { listProperties, createProperty };
