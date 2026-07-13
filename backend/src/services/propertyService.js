@@ -73,4 +73,28 @@ async function publishProperty({ propertyId, ownerId}) {
     });
 }
 
-module.exports = { getPublishedProperties, createProperty, publishProperty };
+async function updateProperty({ propertyId, ownerId, updates}) {
+    const property = await prisma.property.findUnique({ where: { id: propertyId} });
+
+    if(!property || property.deletedAt || property.ownerId !== ownerId) {
+        const error = new Error('Property not found');
+        error.statusCode(404);
+        throw error;
+    }
+
+    if (property.status !== PropertyStatus.DRAFT) {
+        const error = new Error('Only draft properties can be edited');
+        error.statusCode = 409;
+        throw error;
+    }
+
+    const allowedFields = ['title', 'description', 'location', 'price'];
+    const data = {};
+    for (const field of allowedFields) {
+        if (updates[field] !== undefined) data[field] = updates[field];
+    }
+
+    return prisma.property.update({ where: { id: propertyId }, data });
+}
+
+module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty };
