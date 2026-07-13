@@ -1,4 +1,6 @@
 const propertyService = require('../services/propertyService');
+const imageService = require('../services/imageService');
+const { image } = require('../config/cloudinary');
 
 async function listProperties(req,res) {
     try {
@@ -46,4 +48,24 @@ async function publishProperty(req, res) {
     }
 }
 
-module.exports = { listProperties, createProperty, publishProperty };
+async function uploadImage(req,res) {
+    try {
+        if(!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+        const image = await imageService.uploadPropertyImage({
+            propertyId: req.params.id,
+            ownerId: req.user.userId,
+            fileBuffer: req.file.buffer,
+        });
+        res.status(201).json(image);
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message});
+        }
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+}
+
+module.exports = { listProperties, createProperty, publishProperty, uploadImage };
