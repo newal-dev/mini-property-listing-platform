@@ -104,4 +104,18 @@ async function disableProperty(req, res) {
     }
 }
 
-module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty, listAllForAdmin, disableProperty };
+
+async function deleteProperty(req,res) {
+    try {
+        await propertyService.deleteProperty({
+            propertyId: req.params.id,
+            ownerId: req.user.userId,
+        });
+        res.status(204).send();
+    } catch(error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+}
+module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty, listAllForAdmin, disableProperty, deleteProperty };

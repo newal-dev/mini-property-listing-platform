@@ -12,5 +12,6 @@ router.post('/:id/images', authenticate, authorize('OWNER'), upload.single('imag
 router.patch('/:id', authenticate, authorize('OWNER'), PropertyController.updateProperty);
 router.get('/admin/all', authenticate, authorize('ADMIN'), PropertyController.listAllForAdmin);
 router.patch('/:id/disable', authenticate, authorize('ADMIN'), PropertyController.disableProperty);
+router.delete('/:id', authenticate, authorize('OWNER'), PropertyController.deleteProperty);
 
 module.exports = router;

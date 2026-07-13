@@ -116,4 +116,25 @@ async function disableProperty({ propertyId }){
     });
 }
 
-module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty, getAllPropertiesForAdmin, disableProperty };
+async function deleteProperty({ propertyId, ownerId }) {
+    const property = await prisma.property.findUnique({ where: { id: propertyId } });
+
+    if(!property || property.deletedAt || property.ownerId !== ownerId) {
+        const error = new Error('Property not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if(property.status !== PropertyStatus.ARCHIVED) {
+        const error = new Error('Property must be archived before it can be deleted');
+        error.statusCode = 409;
+        throw error;
+    }
+
+    return prisma.property.update({
+        where: { id: propertyId},
+        data: { deletedAt: new Date() },
+    });
+}
+
+module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty, getAllPropertiesForAdmin, disableProperty, deleteProperty };
