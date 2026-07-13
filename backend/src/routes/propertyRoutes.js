@@ -10,5 +10,7 @@ router.post('/', authenticate, authorize('OWNER'), PropertyController.createProp
 router.patch('/:id/publish', authenticate, authorize('OWNER'), PropertyController.publishProperty);
 router.post('/:id/images', authenticate, authorize('OWNER'), upload.single('image'), PropertyController.uploadImage);
 router.patch('/:id', authenticate, authorize('OWNER'), PropertyController.updateProperty);
+router.get('/admin/all', authenticate, authorize('ADMIN'), PropertyController.listAllForAdmin);
+router.patch('/:id/disable', authenticate, authorize('ADMIN'), PropertyController.disableProperty);
 
 module.exports = router;

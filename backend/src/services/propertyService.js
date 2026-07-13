@@ -97,4 +97,23 @@ async function updateProperty({ propertyId, ownerId, updates}) {
     return prisma.property.update({ where: { id: propertyId }, data });
 }
 
-module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty };
+async function getAllPropertiesForAdmin() {
+    return prisma.property.findMany({ where: { deletedAt: null } });
+}
+
+async function disableProperty({ propertyId }){
+    const property = await prisma.property.findUnique({ where: { id: propertyId } });
+
+    if (!property || property.deletedAt) {
+        const error = new Error('Property not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return prisma.property.update({
+        where: { id: propertyId },
+        data: { status: PropertyStatus.ARCHIVED },
+    });
+}
+
+module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty, getAllPropertiesForAdmin, disableProperty };

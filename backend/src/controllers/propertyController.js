@@ -83,4 +83,25 @@ async function updateProperty(req,res) {
     }
 }
 
-module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty };
+async function listAllForAdmin(req,res) {
+    try{
+        const properties = await propertyService.getAllPropertiesForAdmin();
+        res.status(200).json(properties);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong'});
+    }
+}
+
+async function disableProperty(req, res) {
+    try {
+        const property = await propertyService.disableProperty({ propertyId: req.params.id });
+        res.status(200).json(property);
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+}
+
+module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty, listAllForAdmin, disableProperty };
