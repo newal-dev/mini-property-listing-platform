@@ -7,7 +7,7 @@ async function register(req,res){
         res.status(201).json({ id: user.id, name: user.name, email: user.email, role: user.role });
     } catch (error) {
         if(error.statusCode) {
-            return res.status(error.StatusCode).json({ error: error.message });
+            return res.status(error.statusCode).json({ error: error.message });
         }
         console.error(error);
         res.status(500).json({ error: 'Something went wrong' });
