@@ -1,13 +1,28 @@
 const { PropertyStatus } = require('@prisma/client');
 const prisma = require('../config/prisma');
 
-async function getPublishedProperties() {
-    return prisma.property.findMany({
-        where: {
-            status: PropertyStatus.PUBLISHED,
-            deletedAt: null,
-        },
-    });
+async function getPublishedProperties({ page = 1, limit = 10, location, minPrice, maxPrice }) {
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) || 10;
+
+    const where = {
+        status: PropertyStatus.PUBLISHED,
+        deletedAt: null,
+        ...(location && { location: { contains: location, mode: 'insensitive' } }),
+        ...(minPrice && { price: { gte: Number(minPrice) } }),
+        ...(maxPrice && { price: { ...(minPrice ? {gte: Number(minPrice) } :{}), lte: Number(maxPrice) } }),
+    };
+
+    const [properties, total] = await Promise.all([
+        prisma.property.findMany({
+            where,
+            skip: (pageNum - 1) * limitNum,
+            take: limitNum,
+        }),
+        prisma.property.count({ where }),
+    ]);
+
+    return { properties, total, page: pageNum, totalPages: Math.ceil(total / limitNum) };
 }
 
 async function createProperty({ ownerId, title, description, location, price }) {

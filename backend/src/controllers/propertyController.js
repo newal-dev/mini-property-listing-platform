@@ -4,8 +4,9 @@ const { image } = require('../config/cloudinary');
 
 async function listProperties(req,res) {
     try {
-        const properties = await propertyService.getPublishedProperties();
-        res.status(200).json(properties);
+        const { page, limit, location, minPrice, maxPrice } = req.query;
+        const result = await propertyService.getPublishedProperties({ page, limit, location, minPrice, maxPrice });
+        res.status(200).json(result);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Something went wrong' });
