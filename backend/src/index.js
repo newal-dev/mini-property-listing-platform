@@ -9,8 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+  origin: [
+    'http://localhost:3000',
+    'https://mini-property-listing-platform-khnu-59qyd2qql-newal.vercel.app'
+  ],
+  credentials: true
 }));
 
 app.use(express.json());
