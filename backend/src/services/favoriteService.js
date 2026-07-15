@@ -26,4 +26,11 @@ async function removeFavorite({ userId, propertyId }){
     await prisma.favorite.deleteMany({ where: {userId, propertyId } });
 }
 
-module.exports = { addFavorite, removeFavorite };
+async function getMyFavorites({ userId }) {
+  return prisma.favorite.findMany({
+    where: { userId },
+    include: { property: true },
+  });
+}
+
+module.exports = { addFavorite, removeFavorite, getMyFavorites };

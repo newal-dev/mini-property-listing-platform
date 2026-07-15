@@ -27,4 +27,13 @@ async function removeFavorite(req,res) {
     }
 }
 
-module.exports = { addFavorite, removeFavorite };
+async function listMine(req, res) {
+  try {
+    const favorites = await favoriteService.getMyFavorites({ userId: req.user.id });
+    res.json({ favorites });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch favorites' });
+  }
+}
+
+module.exports = { addFavorite, removeFavorite, listMine };
