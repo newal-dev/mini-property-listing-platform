@@ -18,6 +18,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/');
     } catch (err) {
       setError(err.message);
