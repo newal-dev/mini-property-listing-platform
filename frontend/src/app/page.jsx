@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useMutation,  useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '../lib/api';
 
 export default function HomePage() {
     const [properties, setProperties] = useState([]);

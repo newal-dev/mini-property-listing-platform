@@ -1,7 +1,7 @@
 'use client'
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { useRequireAuth } from '@/lib/useAuth';
+import { apiFetch } from '../../lib/api'; 
+import { useRequireAuth } from '../../lib/useAuth';
 
 export default function OwnerDashboard() {
     const { user, loading } = useRequireAuth('OWNER');
