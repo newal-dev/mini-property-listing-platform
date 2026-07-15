@@ -119,4 +119,15 @@ async function deleteProperty(req,res) {
         res.status(500).json({ error: 'Something went wrong' });
     }
 }
-module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty, listAllForAdmin, disableProperty, deleteProperty };
+
+async function listMine(req, res) {
+    try {
+        const properties = await propertyService.getMyProperties({ ownerId: req.user.userId });
+        res.status(200).json(properties);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong'});
+    }
+}
+
+module.exports = { listProperties, createProperty, publishProperty, uploadImage, updateProperty, listAllForAdmin, disableProperty, deleteProperty, listMine };

@@ -5,6 +5,7 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 const upload = require('../middleware/upload');
 
+router.get('/mine', authenticate, authorize('OWNER'), PropertyController.listMine);
 router.get('/', PropertyController.listProperties);
 router.post('/', authenticate, authorize('OWNER'), PropertyController.createProperty);
 router.patch('/:id/publish', authenticate, authorize('OWNER'), PropertyController.publishProperty);

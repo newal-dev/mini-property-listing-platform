@@ -152,4 +152,12 @@ async function deleteProperty({ propertyId, ownerId }) {
     });
 }
 
-module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty, getAllPropertiesForAdmin, disableProperty, deleteProperty };
+
+async function getMyProperties({ ownerId }) {
+    return prisma.property.findMany ({ 
+        where: { ownerId, deletedAt: null},
+        include: { images: true },
+    });
+}
+
+module.exports = { getPublishedProperties, createProperty, publishProperty, updateProperty, getAllPropertiesForAdmin, disableProperty, deleteProperty, getMyProperties };
