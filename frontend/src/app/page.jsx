@@ -5,7 +5,7 @@ import { useMutation,  useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 
 export default function HomePage() {
-    const [properties, setProperties] = useState<any[]>([]);
+    const [properties, setProperties] = useState([]);
 
     useEffect(() => {
         apiFetch('/properties').then((data) => setProperties(data.properties));
