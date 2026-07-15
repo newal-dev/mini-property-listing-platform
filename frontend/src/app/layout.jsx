@@ -21,6 +21,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <nav style = {{ padding:'1rem', display: 'flex', gap: '1rem' }}>
+          <a href="/">Home</a>
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        </nav>
         <Providers>{children}</Providers>
       </body>
     </html>
