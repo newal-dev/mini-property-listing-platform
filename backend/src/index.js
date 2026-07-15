@@ -9,10 +9,20 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://mini-property-listing-platform-khnu-59qyd2qql-newal.vercel.app'
-  ],
+  origin: (origin, callback) => {
+    // Always allow requests from localhost (dev) or no origin (curl/Postman)
+    if (!origin || origin.startsWith('http://localhost:3000')) {
+      return callback(null, true);
+    }
+
+    // Allow any *.vercel.app domain
+    if (/\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Otherwise block
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 
