@@ -21,7 +21,7 @@ async function login(req, res) {
         res.status(200).json(result);
     } catch (error) {
         if(error.statusCode) {
-            return res.status(error.StatusCode).json({ error: error.message});
+            return res.status(error.statusCode).json({ error: error.message});
         }
         console.error(error);
         res.status(500).json({ error: 'Something went wrong' });
