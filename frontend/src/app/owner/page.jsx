@@ -14,6 +14,9 @@ export default function OwnerDashboard() {
     const [price, setPrice] = useState('');
     const [files, setFiles] = useState({});
     const [editingId, setEditingId] = useState(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [editDescription, setEditDescription] = useState('');
+    const [editLocation, setEditLocation] = useState('');
     const [editPrice, setEditPrice] = useState('');
 
     const { data=[], isLoading, error } = useQuery({
@@ -60,15 +63,16 @@ export default function OwnerDashboard() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, price }) => apiFetch(`/properties/${id}`, {
+        mutationFn: ({ id, title, description, location, price }) => apiFetch(`/properties/${id}`, {
             method: 'PATCH',
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            body: JSON.stringify({ price: Number(price) }),
+            body: JSON.stringify({ title, description, location, price: Number(price) }),
         }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['myProperties'] });
             setEditingId(null);
         },
+        onError: (err) => alert(err.message)
         });
 
         const deleteMutation = useMutation({
@@ -77,6 +81,7 @@ export default function OwnerDashboard() {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myProperties'] }),
+        onError: (err) => alert(err.message)
         });
 
     if (loading) return <p>Loading...</p>;
@@ -95,7 +100,16 @@ export default function OwnerDashboard() {
                 <input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
                 <input placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} required />
                 <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} required />
-                <button type="submit">Create Property</button>
+                <button type="submit" 
+                style={{
+                    border: '2px solid #ddd',
+                    borderRadius: '6px',
+                    padding: '0.5rem 1rem',
+                    backgroundColor: 'transparent',
+                    color: '#000000',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                }}>Create Property</button>
             </form>
             
             {data.map((p) => (
@@ -187,10 +201,7 @@ export default function OwnerDashboard() {
                                     Publish
                                 </button>
                             </div>
-                        </>
-                    )}
-                    
-                    {p.status !== 'ARCHIVED' && (
+                            
                         <div style={{ marginTop: '0.5rem' }}>
                             {editingId === p.id ? (
                                 <div
@@ -246,6 +257,8 @@ export default function OwnerDashboard() {
                                 </button>
                             )}
                         </div>
+                    
+                        </>
                     )}
 
                     {/* 3. ARCHIVED ONLY ACTIONS */}
@@ -263,6 +276,7 @@ export default function OwnerDashboard() {
                         >Delete</button>
                     )}
                 </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '150px' }}>
                 <div style={{ 
                     width: '150px', 
                     height: '150px', 
@@ -275,7 +289,7 @@ export default function OwnerDashboard() {
                     justifyContent: 'center',
                     border: '1px solid #ddd'
                 }}>
-                    {p.images ? (
+                    {p.images && p.images.length > 0 ? (
                     <img 
                         src={p.images[0].url}
                         alt={p.title} 
@@ -286,6 +300,19 @@ export default function OwnerDashboard() {
                         No Image
                     </span>
                 )}
+                </div>
+                {p.images && p.images.length > 1 && (
+                    <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', paddingBottom: '4px' }}>
+                        {p.images.slice(1).map((img) => (
+                            <img 
+                                key={img.id}
+                                src={img.url}
+                                alt="sub"
+                                style={{ width: '35px', height: '35px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ccc' }}
+                            />
+                        ))}
+                    </div>
+                )}            
                 </div>
                 </div>
             ))}
