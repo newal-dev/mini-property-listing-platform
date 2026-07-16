@@ -96,7 +96,7 @@ async function updateProperty({ propertyId, ownerId, updates}) {
 
     if(!property || property.deletedAt || property.ownerId !== ownerId) {
         const error = new Error('Property not found');
-        error.statusCode(404);
+        error.statusCode = 404;
         throw error;
     }
 
