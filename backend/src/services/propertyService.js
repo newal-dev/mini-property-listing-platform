@@ -116,7 +116,11 @@ async function updateProperty({ propertyId, ownerId, updates}) {
 }
 
 async function getAllPropertiesForAdmin() {
-    return prisma.property.findMany({ where: { deletedAt: null } });
+    return prisma.property.findMany({ where: { deletedAt: null },
+    include: {
+            images: true
+        }
+    });
 }
 
 async function disableProperty({ propertyId }){
