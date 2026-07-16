@@ -18,6 +18,9 @@ async function getPublishedProperties({ page = 1, limit = 10, location, minPrice
             where,
             skip: (pageNum - 1) * limitNum,
             take: limitNum,
+            include: {
+                images: true,
+            },
         }),
         prisma.property.count({ where }),
     ]);
