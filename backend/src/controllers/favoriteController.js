@@ -30,9 +30,10 @@ async function removeFavorite(req,res) {
 async function listMine(req, res) {
   try {
     const favorites = await favoriteService.getMyFavorites({ userId: req.user.id });
-    res.json({ favorites });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch favorites' });
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong'});
   }
 }
 
