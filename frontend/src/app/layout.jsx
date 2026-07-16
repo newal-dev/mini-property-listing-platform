@@ -20,8 +20,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <nav style = {{ padding:'1rem', display: 'flex', gap: '1rem' }}>
+      <body style={{ margin: 0, fontFamily: "Arial, sans-serif", backgroundColor: "#f5f5f5" }}>
+        <nav style = {{ padding:'1rem 2rem', display: 'flex', gap: '1.5rem', backgroundColor: "#000", color: "#fff", alignItems: "center"}}>
           <a href="/">Home</a>
           <a href="/login">Login</a>
           <a href="/register">Register</a>
