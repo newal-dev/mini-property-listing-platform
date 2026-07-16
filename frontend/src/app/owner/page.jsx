@@ -13,6 +13,8 @@ export default function OwnerDashboard() {
     const [location, setLocation] = useState('');
     const [price, setPrice] = useState('');
     const [files, setFiles] = useState({});
+    const [editingId, setEditingId] = useState(null);
+    const [editPrice, setEditPrice] = useState('');
 
     const { data=[], isLoading, error } = useQuery({
         queryKey: ['myProperties'],
@@ -57,6 +59,26 @@ export default function OwnerDashboard() {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myProperties'] }),
     });
 
+    const updateMutation = useMutation({
+        mutationFn: ({ id, price }) => apiFetch(`/properties/${id}`, {
+            method: 'PATCH',
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            body: JSON.stringify({ price: Number(price) }),
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['myProperties'] });
+            setEditingId(null);
+        },
+        });
+
+        const deleteMutation = useMutation({
+        mutationFn: (id) => apiFetch(`/properties/${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myProperties'] }),
+        });
+
     if (loading) return <p>Loading...</p>;
     if (!user) return null;
     if(isLoading) return <p>Loading ...</p>;
@@ -83,10 +105,15 @@ export default function OwnerDashboard() {
                         borderRadius: '8px',
                         padding: '1rem',
                         marginBottom: '1rem',
+                        display: 'flex',        
+                        justifyContent: 'space-between',
+                        gap: '1.5rem',
+                        alignItems: 'flex-start'
                     }}
                 >
-                    <h2>{p.title} — {p.status}</h2>
-                    <p>{p.location} — ${p.price}</p>
+                    <div>
+                    <h2 style={{ margin: '0 0 0.5rem 0' }}>{p.title} — {p.status}</h2>
+                    <p style={{ margin: '0 0 1rem 0', color: '#666' }}>{p.location} — ${p.price}</p>
                     {p.status === 'DRAFT' && (
                         <>
                             <label className="file-upload">
@@ -98,7 +125,9 @@ export default function OwnerDashboard() {
                                         color: '#000000',
                                         fontWeight: 'bold',
                                         cursor: 'pointer',
-                                        width:'9rem'
+                                        width:'9rem',
+                                        margin: '0 0 0.5rem 0',
+                                        textAlign: 'center'
                                     }}>Choose Image</p>
                                 <input
                                     type="file"
@@ -110,11 +139,12 @@ export default function OwnerDashboard() {
                             </label>
 
 
-                            <div
+                            <div 
                                 style={{
                                     display: 'flex',
                                     gap: '2rem',
                                     marginTop: '0.75rem',
+                                    marginBottom: '1rem'
                                 }}
                             >
                                 <button type="button"
@@ -159,6 +189,104 @@ export default function OwnerDashboard() {
                             </div>
                         </>
                     )}
+                    
+                    {p.status !== 'ARCHIVED' && (
+                        <div style={{ marginTop: '0.5rem' }}>
+                            {editingId === p.id ? (
+                                <div
+                                style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <input
+                                        type="number"
+                                        value={editPrice}
+                                        onChange={(e) => setEditPrice(e.target.value)}
+                                        placeholder="New price"
+                                        style={{ padding: '0.25rem' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => updateMutation.mutate({ id: p.id, price: editPrice })}
+                                        style={{
+                                            border: '2px solid #ddd',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            backgroundColor: 'transparent',
+                                            color: '#000000',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                        }}
+                                    >Save</button>
+
+                                    <button type="button" onClick={() => setEditingId(null)}
+                                        style={{
+                                            border: '2px solid #ddd',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            backgroundColor: 'transparent',
+                                            color: '#000000',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                        }}
+                                    >Cancel</button>
+                                </div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => { setEditingId(p.id); setEditPrice(p.price); }}
+                                    style={{
+                                            border: '2px solid #ddd',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            backgroundColor: 'transparent',
+                                            color: '#000000',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                        }}
+                                >
+                                    Edit Price
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* 3. ARCHIVED ONLY ACTIONS */}
+                    {p.status === 'ARCHIVED' && (
+                        <button type="button" onClick={() => deleteMutation.mutate(p.id)}
+                        style={{
+                            border: '2px solid #ddd',
+                            borderRadius: '6px',
+                            padding: '0.5rem 1rem',
+                            backgroundColor: 'transparent',
+                            color: '#000000',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                        }}
+                        >Delete</button>
+                    )}
+                </div>
+                <div style={{ 
+                    width: '150px', 
+                    height: '150px', 
+                    flexShrink: 0, 
+                    borderRadius: '6px', 
+                    overflow: 'hidden', 
+                    backgroundColor: '#f0f0f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #ddd'
+                }}>
+                    {p.images ? (
+                    <img 
+                        src={p.images[0].url}
+                        alt={p.title} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <span style={{ fontSize: '0.8rem', color: '#999', textAlign: 'center', padding: '0.5rem' }}>
+                        No Image
+                    </span>
+                )}
+                </div>
                 </div>
             ))}
         </main>
