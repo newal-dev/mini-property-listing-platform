@@ -29,7 +29,7 @@ async function removeFavorite({ userId, propertyId }){
 async function getMyFavorites({ userId }) {
   return prisma.favorite.findMany({
     where: { userId },
-    include: { property: true },
+    include: { property: { include: { images: true } }},
   });
 }
 
