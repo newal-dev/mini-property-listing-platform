@@ -6,7 +6,7 @@ A role-based property listing platform where Owners list properties, Regular Use
 Core requirements complete — backend, frontend, and deployment are all live.
 
 ## Live URLs
-- **Frontend:** `https://mini-property-listing-platform-khnu.vercel.app/`
+- **Frontend:** https://mini-property-listing-platform-khnu.vercel.app/
 - **Backend API:** https://mini-property-listing-platform.onrender.com/api
 - **Health check:** https://mini-property-listing-platform.onrender.com/health
 
