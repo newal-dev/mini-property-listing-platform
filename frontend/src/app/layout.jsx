@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Nav from "./Nav";
 import Providers from "./providers";
 
 const geistSans = Geist({
@@ -21,11 +22,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body style={{ margin: 0, fontFamily: "Arial, sans-serif", backgroundColor: "#f5f5f5" }}>
-        <nav style = {{ padding:'1rem 2rem', display: 'flex', gap: '1.5rem', backgroundColor: "#000", color: "#fff", alignItems: "center"}}>
-          <a href="/">Home</a>
-          <a href="/login">Login</a>
-          <a href="/register">Register</a>
-        </nav>
+        <Nav />
         <Providers>{children}</Providers>
       </body>
     </html>
