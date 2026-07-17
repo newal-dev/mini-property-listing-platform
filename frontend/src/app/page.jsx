@@ -69,7 +69,7 @@ export default function HomePage() {
                       {isFav ? '❤️ Favorited' : '🤍 Favorite'}
                     </button>
                   ) : (
-                    <span style={{ fontSize: '0.8rem', color: '#a1a1aa', fontStyle: 'italic' }}>Log in to save favorites</span>
+                    <span style={{ fontSize: '0.8rem', color: '#71717a', fontStyle: 'italic' }}>Log in to save favorites</span>
                   )}
                 </div>
               </div>
