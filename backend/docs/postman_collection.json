@@ -1,0 +1,275 @@
+{
+  "info": {
+    "_postman_id": "property-listing-platform-id",
+    "name": "Property Platform API",
+    "description": "API collection for the Mini Multi-Tenant Property Listing Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"OWNER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Get Public Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/properties?page=1&limit=10&location=New York&minPrice=1000&maxPrice=5000",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "location", "value": "New York" },
+                { "key": "minPrice", "value": "1000" },
+                { "key": "maxPrice", "value": "5000" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Properties (Owner)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", "mine"]
+            }
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Luxury Modern Apartment\",\n  \"description\": \"Stunning high-floor condo with panoramic skyline views.\",\n  \"location\": \"New York, NY\",\n  \"price\": 4500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/properties",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties"]
+            }
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Luxury Modern Apartment (Updated)\",\n  \"description\": \"Stunning high-floor condo with newly upgraded appliances and custom cabinetry.\",\n  \"location\": \"New York, NY\",\n  \"price\": 4200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ":id"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Publish Property",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ":id", "publish"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Soft Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ":id"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Property Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ":id", "images"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Properties (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/admin/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", "admin", "all"]
+            }
+          }
+        },
+        {
+          "name": "Disable Property (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id/disable",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ":id", "disable"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "item": [
+        {
+          "name": "Add Favorite",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/favorites/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["favorites", ":id"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove Favorite",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/favorites/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["favorites", ":id"],
+              "variable": [
+                { "key": "id", "value": "REPLACE_WITH_PROPERTY_UUID" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/favorites",
+              "host": ["{{baseUrl}}"],
+              "path": ["favorites"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
